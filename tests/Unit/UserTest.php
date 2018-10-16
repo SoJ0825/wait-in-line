@@ -21,4 +21,15 @@ class UserTest extends TestCase
 
         $this->assertFalse($originalApiToken === $apiToken);
     }
+
+    public function testItCanCheckIfUserIsAnAdmin()
+    {
+        $user = factory('App\User')->create();
+
+        $this->assertFalse($user->isAdmin());
+
+        $user = factory('App\User')->create(['name' => 'ttn']);
+
+        $this->assertTrue($user->isAdmin());
+    }
 }
