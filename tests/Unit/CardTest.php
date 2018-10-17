@@ -43,4 +43,18 @@ class CardTest extends TestCase
         $this->assertNull($userWithOneCard->fresh()->card);
         $this->assertNull($userWithTwoCard->fresh()->card);
     }
+
+    public function testItCanSkipCard()
+    {
+        $card = factory('App\Card')->create();
+
+        $this->assertEquals(1, $card->current);
+
+        $card->skip();
+
+        $this->assertEquals(2, $card->fresh()->current);
+
+        $card->skip(3);
+        $this->assertEquals(5, $card->fresh()->current);
+    }
 }

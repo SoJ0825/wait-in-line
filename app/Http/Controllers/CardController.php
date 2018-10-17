@@ -43,4 +43,19 @@ class CardController extends Controller
 
         return ['result' => 'success'];
     }
+
+    public function update()
+    {
+        if (! Auth::user()->isAdmin()) {
+            return response(['result' => 'fail'], 401);
+        }
+
+        Card::firstOrCreate(['id' => 1]);
+
+        $card = Card::find(1);
+
+        $card->skip();
+
+        return ['result' => 'success', 'current' => $card->current];
+    }
 }

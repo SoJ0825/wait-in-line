@@ -25,4 +25,5 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/cards', 'CardController@show');
     Route::post('/cards/{user}', 'CardController@store');
     Route::delete('/cards', 'CardController@destroy');
+    Route::patch('/cards', 'CardController@update');
 });

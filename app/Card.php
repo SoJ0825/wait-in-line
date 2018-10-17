@@ -20,6 +20,11 @@ class Card extends Model
         $this->increment('current');
     }
 
+    public function skip($count = 1)
+    {
+        $this->increment('current', $count);
+    }
+
     public function resetCurrent()
     {
         $this->current = 1;

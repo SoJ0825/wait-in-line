@@ -87,4 +87,33 @@ class CardTest extends TestCase
 
         $this->assertEquals($response['result'], 'success');
     }
+
+    public function testUserCantSkipCard()
+    {
+        $response = $this->json(
+            'PATCH',
+            '/cards',
+            [],
+            ['Authorization' => 'Bearer ' . $this->apiToken]
+        )->assertStatus(401)
+        ->decodeResponseJson();
+
+        $this->assertEquals($response['result'], 'fail');
+    }
+
+    public function testAdminCanSkipCard()
+    {
+        $adminUser = factory('App\User')->create(['name' => 'ttn']);
+
+        $response = $this->json(
+            'PATCH',
+            '/cards',
+            [],
+            ['Authorization' => 'Bearer ' . $adminUser->api_token]
+        )->assertStatus(200)
+        ->decodeResponseJson();
+
+        $this->assertEquals($response['result'], 'success');
+        $this->assertEquals($response['current'], 2);
+    }
 }
