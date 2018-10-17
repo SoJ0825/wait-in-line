@@ -20,7 +20,7 @@ class DeskTest extends TestCase
 
     public function testAdminCanListDesks()
     {
-        $desk = factory('App\Desk', 2)->create();
+        $desk = factory('App\Desk', 2)->create(['user_id' => null]);
 
         $response = $this->json(
             'GET',
@@ -28,15 +28,15 @@ class DeskTest extends TestCase
             [],
             ['Authorization' => 'Bearer ' . $this->admin->api_token]
         )->assertStatus(200)
-        ->decodeResponesJson();
+        ->decodeResponseJson();
 
         $this->assertEquals($response['result'], 'success');
-        $this->assertCount($response['desks']);
+        $this->assertCount(2, $response['desks']);
 
-        $this->assertEquals($response['desk'][0]['id'], 1);
-        $this->assertNull($response['desk'][0]['user_id']);
+        $this->assertEquals($response['desks'][0]['id'], 1);
+        $this->assertNull($response['desks'][0]['user_id']);
 
-        $this->assertEquals($response['desk'][1]['id'], 2);
-        $this->assertNull($response['desk'][1]['user_id']);
+        $this->assertEquals($response['desks'][1]['id'], 2);
+        $this->assertNull($response['desks'][1]['user_id']);
     }
 }
