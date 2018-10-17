@@ -23,4 +23,5 @@ Route::post('/login', 'LoginController@store');
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/cards', 'CardController@show');
+    Route::post('/cards/{user}', 'CardController@store');
 });

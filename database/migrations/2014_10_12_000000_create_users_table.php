@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('api_token')->unique()->nullable()->default(null);
+            $table->unsignedInteger('card')->nullable()->default(null);
             $table->timestamps();
         });
     }
