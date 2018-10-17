@@ -41,4 +41,11 @@ class User extends Authenticatable
     {
         return in_array($this->name, ['ttn']);
     }
+
+    public function throwCardAWay()
+    {
+        $this->card = null;
+
+        $this->save();
+    }
 }

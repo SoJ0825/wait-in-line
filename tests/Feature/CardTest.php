@@ -59,4 +59,32 @@ class CardTest extends TestCase
         $this->assertEquals($response['result'], 'success');
         $this->assertEquals($response['card'], 1);
     }
+
+    public function testUserCantResetCard()
+    {
+        $response = $this->json(
+            'DELETE',
+            '/cards',
+            [],
+            ['Authorization' => 'Bearer ' . $this->apiToken]
+        )->assertStatus(401)
+        ->decodeResponseJson();
+
+        $this->assertEquals($response['result'], 'fail');
+    }
+
+    public function testAdminCanResetCard()
+    {
+        $adminUser = factory('App\User')->create(['name' => 'ttn']);
+
+        $response = $this->json(
+            'DELETE',
+            '/cards',
+            [],
+            ['Authorization' => 'Bearer ' . $adminUser->api_token]
+        )->assertStatus(200)
+        ->decodeResponseJson();
+
+        $this->assertEquals($response['result'], 'success');
+    }
 }
