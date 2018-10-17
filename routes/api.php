@@ -23,6 +23,7 @@ Route::post('/login', 'LoginController@store');
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/cards', 'CardController@show');
+    Route::get('/cards/{user}', 'CardController@showUser');
     Route::post('/cards/{user}', 'CardController@store');
     Route::delete('/cards', 'CardController@destroy');
     Route::patch('/cards', 'CardController@update');

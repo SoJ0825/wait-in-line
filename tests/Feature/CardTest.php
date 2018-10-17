@@ -116,4 +116,36 @@ class CardTest extends TestCase
         $this->assertEquals($response['result'], 'success');
         $this->assertEquals($response['current'], 2);
     }
+
+    public function testUserCanShowCard()
+    {
+        $response = $this->json(
+            'GET',
+            '/cards/' . $this->user->id,
+            [],
+            ['Authorization' => 'Bearer ' . $this->apiToken]
+        )->assertStatus(200)
+        ->decodeResponseJson();
+
+        $this->assertEquals($response['result'], 'success');
+        $this->assertNull($response['card']);
+
+        $this->json(
+            'POST',
+            '/cards/' . $this->user->id,
+            [],
+            ['Authorization' => 'Bearer ' . $this->apiToken]
+        );
+
+        $response = $this->json(
+            'GET',
+            '/cards/' . $this->user->id,
+            [],
+            ['Authorization' => 'Bearer ' . $this->apiToken]
+        )->assertStatus(200)
+        ->decodeResponseJson();
+
+        $this->assertEquals($response['result'], 'success');
+        $this->assertEquals($response['card'], 1);
+    }
 }

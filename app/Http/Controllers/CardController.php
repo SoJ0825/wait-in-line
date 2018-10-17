@@ -18,6 +18,11 @@ class CardController extends Controller
         return ['result' => 'success', 'current' => $card->current];
     }
 
+    public function showUser(User $user)
+    {
+        return ['result' => 'success', 'card' => $user->card];
+    }
+
     public function store(User $user)
     {
         Card::firstOrCreate(['id' => 1]);
