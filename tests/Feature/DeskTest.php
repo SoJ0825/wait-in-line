@@ -122,4 +122,38 @@ class DeskTest extends TestCase
         $this->assertEquals($response['result'], 'success');
         $this->assertEquals($response['desk'], 1);
     }
+
+    public function testItCheckDeskIsServing()
+    {
+        $desk = factory('App\Desk')->create(['user_id' => null]);
+
+        $response = $this->json(
+            'DELETE',
+            '/desks/' . $desk->id,
+            [],
+            ['Authorization' => 'Bearer ' . $this->admin->api_token]
+        )->assertStatus(200)
+        ->decodeResponseJson();
+
+        $this->assertEquals($response['result'], 'fail');
+        $this->assertEquals($response['message'], 'Desk is not serving');
+    }
+
+    public function testItCanLeaveCustomer()
+    {
+        $desk = factory('App\Desk')->create();
+
+        $userLeaved = $desk->user_id;
+
+        $response = $this->json(
+            'DELETE',
+            '/desks/' . $desk->id,
+            [],
+            ['Authorization' => 'Bearer ' . $this->admin->api_token]
+        )->assertStatus(200)
+        ->decodeResponseJson();
+
+        $this->assertEquals($response['result'], 'success');
+        $this->assertEquals($response['user'], $userLeaved);
+    }
 }

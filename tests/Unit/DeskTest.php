@@ -43,4 +43,23 @@ class DeskTest extends TestCase
 
         $this->assertEquals($emptyDesk->id, Desk::findEmpty()->id);
     }
+
+    public function testItCanCheckIsServing()
+    {
+        $serveDesk = factory('App\Desk')->create();
+
+        $this->assertTrue($serveDesk->isServing());
+    }
+
+    public function testItCanLeaveCustomer()
+    {
+        $user = factory('App\User')->create();
+        $serveDesk = factory('App\Desk')->create(['user_id' => $user->id]);
+
+        $this->assertTrue($serveDesk->isServing());
+
+        $serveDesk->leaveCustomer();
+
+        $this->assertFalse($serveDesk->isServing());
+    }
 }

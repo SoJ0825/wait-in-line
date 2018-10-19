@@ -26,4 +26,16 @@ class Desk extends Model
     {
         return static::where('user_id', null)->first();
     }
+
+    public function isServing()
+    {
+        return $this->user_id !== null;
+    }
+
+    public function leaveCustomer()
+    {
+        $this->user_id = null;
+
+        $this->save();
+    }
 }

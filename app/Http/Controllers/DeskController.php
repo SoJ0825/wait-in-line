@@ -42,4 +42,21 @@ class DeskController extends Controller
 
         return ['result' => 'success', 'desk' => $desk->id];
     }
+
+    public function destroy(Desk $desk)
+    {
+        if (! Auth::user()->isAdmin()) {
+            return response(['result' => 'fail'], 401);
+        }
+
+        if (! $desk->isServing()) {
+            return response(['result' => 'fail', 'message' => 'Desk is not serving']);
+        }
+
+        $userLeaved = $desk->user_id;
+
+        $desk->leaveCustomer();
+
+        return ['result' => 'success', 'user' => $userLeaved];
+    }
 }

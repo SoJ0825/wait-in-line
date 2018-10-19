@@ -30,4 +30,5 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/desks', 'DeskController@index');
     Route::post('/desks/{user}', 'DeskController@store');
+    Route::delete('/desks/{desk}', 'DeskController@destroy');
 });
