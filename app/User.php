@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Desk;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -60,5 +61,10 @@ class User extends Authenticatable
         $this->card = null;
 
         $this->save();
+    }
+
+    public function isBeingServed()
+    {
+        return Desk::where('user_id', $this->id)->exists();
     }
 }

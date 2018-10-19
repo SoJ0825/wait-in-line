@@ -30,6 +30,10 @@ class CardController extends Controller
 
         $card = Card::find(1);
 
+        if ($user->isBeingServed()) {
+            return response(['result' => 'fail', 'message' => 'Can\'t draw a card while being served']);
+        }
+
         $card->sendTo($user);
 
         return ['result' => 'success', 'card' => $user->card];

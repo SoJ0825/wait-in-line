@@ -46,6 +46,27 @@ class CardTest extends TestCase
         $this->json('POST', '/cards/' . $this->user->id)->assertStatus(401);
     }
 
+    public function testUserCantADrawCardWhileBeingServed()
+    {
+        $card = factory('App\Card')->create();
+        $desk = factory('App\Desk')->create();
+
+        $card->sendTo($this->user);
+
+        $desk->serveCustomer($this->user);
+
+        $response = $this->json(
+            'POST',
+            '/cards/' . $this->user->id,
+            [],
+            ['Authorization' => 'Bearer ' . $this->apiToken]
+        )->assertStatus(200)
+        ->decodeResponseJson();
+
+        $this->assertEquals($response['result'], 'fail');
+        $this->assertEquals($response['message'], 'Can\'t draw a card while being served');
+    }
+
     public function testAuthUserCanGetACard()
     {
         $response = $this->json(

@@ -63,4 +63,16 @@ class UserTest extends TestCase
         $this->assertFalse($secondUser->fresh()->isHeadOfLine());
         $this->assertFalse($notDrawUser->fresh()->isHeadOfLine());
     }
+
+    public function testItCanCheckBeingServed()
+    {
+        $user = factory('App\User')->create();
+        $desk = factory('App\Desk')->create(['user_id' => $user->id]);
+
+        $this->assertTrue($user->isBeingServed());
+
+        $desk->leaveCustomer($user);
+
+        $this->assertFalse($user->isBeingServed());
+    }
 }
