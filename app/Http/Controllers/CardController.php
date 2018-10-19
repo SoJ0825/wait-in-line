@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Desk;
 use App\Card;
 use App\User;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ class CardController extends Controller
 
         $card = Card::find(1);
 
-        return ['result' => 'success', 'current' => $card->current];
+        return ['result' => 'success', 'current' => $card->current, 'serving' => Desk::servingCard()];
     }
 
     public function showUser(User $user)

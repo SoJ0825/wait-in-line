@@ -40,4 +40,9 @@ class Desk extends Model
 
         $this->save();
     }
+
+    public static function servingCard()
+    {
+        return static::whereNotNull('serving_card')->max('serving_card');
+    }
 }

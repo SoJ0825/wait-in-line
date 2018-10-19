@@ -35,9 +35,11 @@ class DeskTest extends TestCase
 
         $this->assertEquals($response['desks'][0]['id'], 1);
         $this->assertNull($response['desks'][0]['user_id']);
+        $this->assertNull($response['desks'][0]['serving_card']);
 
         $this->assertEquals($response['desks'][1]['id'], 2);
         $this->assertNull($response['desks'][1]['user_id']);
+        $this->assertNull($response['desks'][1]['serving_card']);
     }
 
     public function testDeskCantServeNoCardCustomer()
