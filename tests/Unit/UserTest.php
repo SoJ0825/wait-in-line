@@ -32,4 +32,35 @@ class UserTest extends TestCase
 
         $this->assertTrue($user->isAdmin());
     }
+
+    public function testItCanCheckIfUserDrawCard()
+    {
+        $card = factory('App\Card')->create();
+        $user = factory('App\User')->create();
+
+        $this->assertFalse($user->isInLine());
+
+        $card->sendTo($user);
+
+        tap($user->fresh(), function ($user) {
+            $this->assertEquals(1, $user->card);
+            $this->assertTrue($user->isInLine());
+        });
+    }
+
+    public function testItCanCheckIfHeadOfLine()
+    {
+        $card = factory('App\Card')->create();
+
+        $firstUser = factory('App\User')->create();
+        $secondUser = factory('App\User')->create();
+        $notDrawUser = factory('App\User')->create();
+
+        $card->sendTo($firstUser);
+        $card->sendTo($secondUser);
+
+        $this->assertTrue($firstUser->fresh()->isHeadOfLine());
+        $this->assertFalse($secondUser->fresh()->isHeadOfLine());
+        $this->assertFalse($notDrawUser->fresh()->isHeadOfLine());
+    }
 }

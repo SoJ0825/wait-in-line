@@ -42,6 +42,19 @@ class User extends Authenticatable
         return in_array($this->name, ['ttn']);
     }
 
+    public function isInLine()
+    {
+        return !! $this->card;
+    }
+
+    public function isHeadOfLine()
+    {
+        $head = static::whereNotNull('card')
+            ->orderBy('card')->first();
+
+        return $this->id == $head->id;
+    }
+
     public function throwCardAWay()
     {
         $this->card = null;

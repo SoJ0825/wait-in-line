@@ -29,4 +29,5 @@ Route::middleware('auth:api')->group(function () {
     Route::patch('/cards', 'CardController@update');
 
     Route::get('/desks', 'DeskController@index');
+    Route::post('/desks/{user}', 'DeskController@store');
 });
