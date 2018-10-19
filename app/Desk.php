@@ -13,13 +13,14 @@ class Desk extends Model
 
     public function serveCustomer(User $user)
     {
+        $this->user_id = $user->id;
+        $this->serving_card = $user->card;
+
+        $this->save();
+
         $user->card = null;
 
         $user->save();
-
-        $this->user_id = $user->id;
-
-        $this->save();
     }
 
     public static function findEmpty()
@@ -35,6 +36,7 @@ class Desk extends Model
     public function leaveCustomer()
     {
         $this->user_id = null;
+        $this->serving_card = null;
 
         $this->save();
     }

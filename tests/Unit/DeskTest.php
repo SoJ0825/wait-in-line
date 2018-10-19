@@ -19,8 +19,9 @@ class DeskTest extends TestCase
         $card->sendTo($user);
 
         $user = $user->fresh();
+        $userCard = $user->card;
 
-        $this->assertEquals(1, $user->card);
+        $this->assertEquals($userCard, $user->card);
 
         $desk->serveCustomer($user);
 
@@ -28,6 +29,7 @@ class DeskTest extends TestCase
         $user = $user->fresh();
 
         $this->assertEquals($desk->user_id, $user->id);
+        $this->assertEquals($desk->serving_card, $userCard);
         $this->assertNull($user->card);
     }
 
@@ -54,12 +56,19 @@ class DeskTest extends TestCase
     public function testItCanLeaveCustomer()
     {
         $user = factory('App\User')->create();
-        $serveDesk = factory('App\Desk')->create(['user_id' => $user->id]);
+        $card = factory('App\Card')->create();
+        $serveDesk = factory('App\Desk')->create();
+
+        $card->sendTo($user);
+
+        $serveDesk->serveCustomer($user);
 
         $this->assertTrue($serveDesk->isServing());
+        $this->assertNotNull($serveDesk->serving_card);
 
         $serveDesk->leaveCustomer();
 
         $this->assertFalse($serveDesk->isServing());
+        $this->assertNull($serveDesk->serving_card);
     }
 }

@@ -16,6 +16,7 @@ class CreateDesksTable extends Migration
         Schema::create('desks', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id')->nullable()->default(null);
+            $table->unsignedInteger('serving_card')->nullable()->default(null);
             $table->timestamps();
         });
     }
