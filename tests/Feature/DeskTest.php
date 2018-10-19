@@ -143,7 +143,7 @@ class DeskTest extends TestCase
 
     public function testItCanLeaveCustomer()
     {
-        $desk = factory('App\Desk')->create();
+        $desk = factory('App\Desk')->create(['serving_card' => 1]);
 
         $userLeaved = $desk->user_id;
 

@@ -48,7 +48,7 @@ class DeskTest extends TestCase
 
     public function testItCanCheckIsServing()
     {
-        $serveDesk = factory('App\Desk')->create();
+        $serveDesk = factory('App\Desk')->create(['serving_card' => 1]);
 
         $this->assertTrue($serveDesk->isServing());
     }

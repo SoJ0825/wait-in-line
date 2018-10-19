@@ -25,12 +25,12 @@ class Desk extends Model
 
     public static function findEmpty()
     {
-        return static::where('user_id', null)->first();
+        return static::where('id', '!=', 0)->where('serving_card', null)->first();
     }
 
     public function isServing()
     {
-        return $this->user_id !== null;
+        return $this->serving_card !== null;
     }
 
     public function leaveCustomer()
