@@ -31,6 +31,13 @@ class Card extends Model
 
         $this->save();
 
+        $virtualDesk = Desk::find(6);
+
+        if ($virtualDesk) {
+            $virtualDesk->serving_card = null;
+            $virtualDesk->save();
+        }
+
         $users = User::all();
 
         foreach ($users as $user) {
