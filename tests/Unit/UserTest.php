@@ -51,17 +51,39 @@ class UserTest extends TestCase
     public function testItCanCheckIfHeadOfLine()
     {
         $card = factory('App\Card')->create();
+        $desk = factory('App\Desk')->create(['user_id' => null]);
 
         $firstUser = factory('App\User')->create();
         $secondUser = factory('App\User')->create();
+        $thirdUser = factory('App\User')->create();
         $notDrawUser = factory('App\User')->create();
 
         $card->sendTo($firstUser);
         $card->sendTo($secondUser);
+        $card->sendTo($thirdUser);
 
-        $this->assertTrue($firstUser->fresh()->isHeadOfLine());
+        $desk->serveCustomer($secondUser);
+
+        $this->assertFalse($firstUser->fresh()->isHeadOfLine());
         $this->assertFalse($secondUser->fresh()->isHeadOfLine());
+        $this->assertTrue($thirdUser->fresh()->isHeadOfLine());
         $this->assertFalse($notDrawUser->fresh()->isHeadOfLine());
+    }
+
+    public function testItCanCheckIfIsOver()
+    {
+        $card = factory('App\Card')->create();
+        $desk = factory('App\Desk')->create(['user_id' => null]);
+
+        $overUser = factory('App\User')->create();
+        $servingUser = factory('App\User')->create();
+
+        $card->sendTo($overUser);
+        $card->sendTo($servingUser);
+
+        $desk->serveCustomer($servingUser);
+
+        $this->assertTrue($overUser->fresh()->isOver());
     }
 
     public function testItCanCheckBeingServed()

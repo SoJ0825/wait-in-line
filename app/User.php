@@ -50,10 +50,33 @@ class User extends Authenticatable
 
     public function isHeadOfLine()
     {
+        $servingCard = Desk::servingCard() ?? 0;
         $head = static::whereNotNull('card')
+            ->where('card', '>', $servingCard)
             ->orderBy('card')->first();
 
+        if ($head == null) {
+            return false;
+        }
+
         return $this->id == $head->id;
+    }
+
+    public function isOver()
+    {
+        if (Desk::servingCard() == null) {
+            return false;
+        }
+
+        $behind = static::whereNotNull('card')
+            ->where('card', '<=', Desk::servingCard())
+            ->get()
+            ->map(function ($user) {
+                return $user->id;
+            })
+            ->toArray();
+
+        return in_array($this->id, $behind);
     }
 
     public function throwCardAWay()

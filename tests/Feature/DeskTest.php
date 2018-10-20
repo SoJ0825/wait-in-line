@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Desk;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -125,6 +126,30 @@ class DeskTest extends TestCase
         $this->assertEquals($response['desk'], 1);
     }
 
+    public function testAdminCanLeadOverCustomerToDesk()
+    {
+        $desks = factory('App\Desk', 5)->create(['user_id' => null]);
+        $card = factory('App\Card')->create();
+        $over = factory('App\User')->create();
+        $serving = factory('App\User')->create();
+
+        $card->sendTo($over);
+        $card->sendTo($serving);
+
+        $desks[0]->serveCustomer($serving);
+
+        $response = $this->json(
+            'POST',
+            '/desks/' . $over->id,
+            [],
+            ['Authorization' => 'Bearer ' . $this->admin->api_token]
+        )->assertStatus(200)
+        ->decodeResponseJson();
+
+        $this->assertEquals($response['result'], 'success');
+        $this->assertEquals($response['desk'], 2);
+    }
+
     public function testItCheckDeskIsServing()
     {
         $desk = factory('App\Desk')->create(['user_id' => null]);
@@ -157,5 +182,48 @@ class DeskTest extends TestCase
 
         $this->assertEquals($response['result'], 'success');
         $this->assertEquals($response['user'], $userLeaved);
+    }
+
+    public function testItCantSkipOverReleasedCard()
+    {
+        $user = factory('App\User')->create();
+        $card = factory('App\Card')->create();
+        $desk = factory('App\Desk')->create();
+
+        $card->sendTo($user);
+        $desk->serveCustomer($user);
+
+        $response = $this->json(
+            'PATCH',
+            '/desks',
+            [],
+            ['Authorization' => 'Bearer ' . $this->admin->api_token]
+        )->assertStatus(200)
+        ->decodeResponseJson();
+
+        $this->assertEquals($response['result'], 'fail');
+        $this->assertEquals($response['message'], 'Can\'t skip over released card');
+    }
+
+    public function testItCantSkip()
+    {
+        $users = factory('App\User', 2)->create();
+        $card = factory('App\Card')->create();
+        $desks = factory('App\Desk', 5)->create(['user_id' => null]);
+
+        $card->sendTo($users[0]);
+        $desks[0]->serveCustomer($users[0]);
+        $card->sendTo($users[1]);
+
+        $response = $this->json(
+            'PATCH',
+            '/desks',
+            [],
+            ['Authorization' => 'Bearer ' . $this->admin->api_token]
+        )->assertStatus(200)
+        ->decodeResponseJson();
+
+        $this->assertEquals($response['result'], 'success');
+        $this->assertEquals($response['serving'], 2);
     }
 }

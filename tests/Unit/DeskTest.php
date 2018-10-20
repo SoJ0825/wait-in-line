@@ -71,4 +71,37 @@ class DeskTest extends TestCase
         $this->assertFalse($serveDesk->isServing());
         $this->assertNull($serveDesk->serving_card);
     }
+
+    public function testItCanCheckIfOverReleasedCard()
+    {
+        $servingUser = factory('App\User')->create();
+        $waitingUser = factory('App\User')->create();
+        $card = factory('App\Card')->create();
+        $desk = factory('App\Desk')->create();
+
+        $card->sendTo($servingUser);
+        $card->sendTo($waitingUser);
+
+        $desk->serveCustomer($servingUser);
+
+        $this->assertFalse(Desk::isOverReleasedCard());
+
+        $desk->serveCustomer($waitingUser);
+
+        $this->assertTrue(Desk::isOverReleasedCard());
+    }
+
+    public function testItCanSkipACard()
+    {
+        $user = factory('App\User')->create();
+        $card = factory('App\Card')->create();
+        $desks = factory('App\Desk', 5)->create(['user_id' => null]);
+
+        $card->sendTo($user);
+        $desks[0]->serveCustomer($user);
+
+        Desk::skip();
+
+        $this->assertEquals(2, Desk::servingCard());
+    }
 }

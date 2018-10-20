@@ -30,7 +30,7 @@ class DeskController extends Controller
             return response(['result' => 'fail', 'message' => 'Draw a card first']);
         }
 
-        if (! $user->isHeadOfLine()) {
+        if ((! $user->isHeadOfLine()) && (! $user->isOver())) {
             return response(['result' => 'fail', 'message' => 'Not your turn']);
         }
 
@@ -58,5 +58,20 @@ class DeskController extends Controller
         $desk->leaveCustomer();
 
         return ['result' => 'success', 'user' => $userLeaved];
+    }
+
+    public function update()
+    {
+        if (! Auth::user()->isAdmin()) {
+            return response(['result' => 'fail'], 401);
+        }
+
+        if (Desk::isOverReleasedCard()) {
+            return response(['result' => 'fail', 'message' => 'Can\'t skip over released card']);
+        }
+
+        Desk::skip();
+
+        return ['result' => 'success', 'serving' => Desk::servingCard()];
     }
 }

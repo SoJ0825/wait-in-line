@@ -45,4 +45,18 @@ class Desk extends Model
     {
         return static::whereNotNull('serving_card')->max('serving_card');
     }
+
+    public static function isOverReleasedCard()
+    {
+        return static::servingCard() >= User::max('card');
+    }
+
+    public static function skip($count = 1)
+    {
+        static::firstOrCreate(['id' => 6]);
+        $virtualDesk = static::find(6);
+
+        $virtualDesk->serving_card = static::servingCard() + 1;
+        $virtualDesk->save();
+    }
 }
