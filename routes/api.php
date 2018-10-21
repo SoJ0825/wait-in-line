@@ -25,6 +25,7 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('/logout', 'LoginController@destroy');
 
     Route::patch('/update', 'RegistrationController@update');
+    Route::get('/users', 'RegistrationController@index');
 
     Route::get('/cards', 'CardController@show');
     Route::get('/cards/{user}', 'CardController@showUser');

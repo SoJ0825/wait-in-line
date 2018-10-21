@@ -26,7 +26,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'api_token',
+        'password', 'api_token', 'email_verified_at', 'created_at', 'updated_at'
     ];
 
     public function generateApiToken()

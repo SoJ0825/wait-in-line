@@ -9,6 +9,21 @@ use Illuminate\Support\Facades\Auth;
 
 class RegistrationController extends Controller
 {
+    public function index()
+    {
+        if (! Auth::user()->isAdmin()) {
+            return response(['result' => 'fail'], 401);
+        }
+
+        $users = User::all()->filter(function ($user) {
+            if (! $user->isAdmin()) {
+                return $user;
+            }
+        });
+
+        return ['result' => 'success', 'users' => $users];
+    }
+
     public function store(Request $request)
     {
         $request->validate([
