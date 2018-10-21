@@ -15,7 +15,7 @@ class DeskController extends Controller
             return response(['result' => 'fail'], 401);
         }
 
-        $desks = Desk::all();
+        $desks = Desk::all()->where('id', '!=', 6);
 
         return ['result' => 'success', 'desks' => $desks];
     }
