@@ -22,6 +22,8 @@ Route::post('/register', 'RegistrationController@store');
 Route::post('/login', 'LoginController@store');
 
 Route::middleware('auth:api')->group(function () {
+    Route::delete('/logout', 'LoginController@destroy');
+
     Route::get('/cards', 'CardController@show');
     Route::get('/cards/{user}', 'CardController@showUser');
     Route::post('/cards/{user}', 'CardController@store');

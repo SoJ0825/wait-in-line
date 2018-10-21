@@ -24,4 +24,13 @@ class LoginController extends Controller
 
         return ['result' => 'fail'];
     }
+
+    public function destroy()
+    {
+        $user = Auth::user();
+        $user->api_token = null;
+        $user->save();
+
+        return ['result' => 'success'];
+    }
 }
